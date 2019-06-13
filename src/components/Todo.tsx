@@ -14,6 +14,7 @@ interface TodoProps {
   addTodo: (e: FormEvent<HTMLFormElement>) => void;
   text: string;
   changeText: (e: ChangeEvent<HTMLInputElement>) => void;
+  toggleTodo: (id: number) => void;
 }
 
 const Todo: FC<TodoProps> = ({
@@ -22,6 +23,7 @@ const Todo: FC<TodoProps> = ({
   addTodo,
   text,
   changeText,
+  toggleTodo,
 }) => {
   return (
     <div>
@@ -39,7 +41,16 @@ const Todo: FC<TodoProps> = ({
       </div>
       <ul>
         {todos.map(todo => (
-          <li key={todo.id} data-id={todo.id}>
+          <li
+            key={todo.id}
+            data-id={todo.id}
+            css={css`
+              text-decoration: ${todo.completed ? 'line-through' : 'none'};
+            `}
+          >
+            <button onClick={() => toggleTodo(todo.id)} type="button">
+              {todo.completed ? '○' : '×'}
+            </button>
             {todo.text}
           </li>
         ))}

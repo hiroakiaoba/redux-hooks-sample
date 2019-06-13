@@ -1,16 +1,9 @@
-import React, {
-  useState,
-  useCallback,
-  useEffect,
-  ChangeEvent,
-  FormEvent,
-} from 'react';
+import React, { useState, ChangeEvent, FormEvent } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../modules/index';
-import { addTodo as addTodoAction } from '../modules/todos/AddTodo';
+import { RootState, actionCreator } from '../modules';
 import TodoComponent, { Todo } from '../components/Todo';
 
-const todosSelector = (state: RootState) => state.todos;
+const todosSelector = (state: RootState) => state.todos.todos;
 
 const count = 1;
 
@@ -25,11 +18,17 @@ const TodoContainer = () => {
 
   const addTodo = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(addTodoAction({ text }));
-    updateText('');
+    if (text) {
+      dispatch(actionCreator.todos.addTodo({ text }));
+      updateText('');
+    }
   };
 
-  const { todos }: { todos: Todo[] } = useSelector(todosSelector);
+  const toggleTodo = (id: number) => {
+    dispatch(actionCreator.todos.toggleTodo({ id }));
+  };
+
+  const todos: Todo[] = useSelector(todosSelector);
 
   return (
     <TodoComponent
@@ -38,6 +37,7 @@ const TodoContainer = () => {
       text={text}
       changeText={changeText}
       addTodo={addTodo}
+      toggleTodo={toggleTodo}
     />
   );
 };
